@@ -1,0 +1,94 @@
+
+<div class="header">
+  <div class="customer-info">
+    <div style="float: left;">
+      <p>Customer Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AJK</p>
+      
+      <p>Customer No.: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9860832534</p>
+    </div>
+    
+    <div style="margin-left: 300px;margin-top: -10px;">
+      <img src="https://i.ibb.co/ZVFsg37/default.png" width="80px" height="80px">
+    </div>
+  </div>
+
+  <div class="general-info">
+    <div style="float: left;">
+      <p>Hotel:</p>
+      <p>Airways:</p>
+      <p>Train:</p>
+      <p>Mobile:</p>
+    </div>
+    <div style="float: left;margin-left:50px;">
+      <p>Express Inn</p>
+      <p>Air India</p>
+      <p>ABC exp</p>
+      <p>Vodafone</p>
+    </div>
+    <div style="float: left;margin-left:100px;">
+      <p>Charges:</p>
+      <p>Fare:</p>
+      <p>Ticket:</p>
+      <p>Free Data:</p>
+    </div>
+    <div style="float: left;margin-left:50px;">
+      <p>$2,000.00</p>
+      <p>$5,000.00</p>
+      <p>$5,000.00</p>
+      <p>500GB 28D</p>
+    </div>
+  </div>
+  
+
+  <div class="order-info">
+    <div *ngFor="let s of summarylist">
+      <p><span>{{s['date']}}</span><span style="margin-left: 50px;margin-right: 20px;">{{s['msg']}}</span></p>
+    </div>  
+  </div>
+  
+</div>
+<br>
+<div class="navbar">
+  <span>View Menu:</span>
+  <span style="margin-left: 30px;">
+    <input type="radio" id="male"><label for="male">Trades</label>&nbsp;
+    <input type="radio" id="male"><label for="male">Drafts</label>&nbsp;
+    <input type="radio" id="male"><label for="male">Orders</label>&nbsp;
+    <input type="radio" id="male"><label for="male">Recommendations</label>&nbsp;
+    <div class="toggle-bar" (click)="toggle()">
+      <div class="ball" id="ball">
+      </div>
+    </div>
+    <label style="margin-left:3px;">Expand All</label>
+  </span>
+  <span>Action Menu:</span>
+  <span style="margin-left: 30px;">
+    <input type="radio" id="male"><label for="male">Request New Booking</label>&nbsp;
+  </span>
+  <span style="margin-left: 50px;">
+    <input type="radio" id="male"><label for="male">View Trades/Drafts</label>&nbsp;
+  </span>
+  <span style="margin-left: 100px;">
+    <label>Drag to Add: </label>&nbsp;&nbsp;
+    <i class="material-icons">restaurant</i>&nbsp;&nbsp;
+    <i class="material-icons">flight</i>&nbsp;&nbsp;
+    <i class="material-icons">train</i>&nbsp;&nbsp;
+    <i class="material-icons">smartphone</i>&nbsp;&nbsp;
+  </span>
+</div>
+
+<app-hotel [hotelexpand] = "hotelexpand" (newevent) = "addsummary($event)"></app-hotel>
+
+<app-plane [planeexpand] = "planeexpand" (newevent) = "addsummary($event)"></app-plane>
+
+<app-train [trainexpand] = "trainexpand" (newevent) = "addsummary($event)"></app-train>
+
+<app-mobile [mobileexpand] = "mobileexpand" (newevent) = "addsummary($event)"></app-mobile>
+
+<div class="navbar" style="margin-top:0px;line-height:30px;text-align: center;" >
+  <span>@Copyright 2021, FinIQ Consulting. All rights reserved.</span>
+</div>
+<br><br>
+
+
+<router-outlet></router-outlet>

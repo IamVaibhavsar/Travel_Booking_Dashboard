@@ -1,0 +1,105 @@
+<div class="databar">
+    <div (click)="trainexpand=true;" *ngIf="trainexpand===false;else expand2" style="float: left;">
+      <i class="fa fa-plus"></i>&nbsp;&nbsp;
+    </div>
+    <ng-template #expand2>
+      <i (click)="trainexpand=false;" class="fa fa-minus"></i>&nbsp;&nbsp;
+    </ng-template>
+    <span>
+      <label>Train</label>
+      <select class="databar-dropdown">
+        <option>Train</option>
+      </select>
+    </span>
+  </div>
+  
+  <div *ngIf="trainexpand" style="max-height: 180px;">
+      
+      <div class="overview">
+          <p style="font-size: larger;">Train</p>
+          <label>{{deals.length}} trades</label><br>
+          <label>0 Drafts</label><br>
+          <label>0 Orders</label><br>
+          <label>0 Alerts</label><br><br>
+          <label>Page 1/1</label>
+      </div>
+      <div class="table-div">
+          <table>
+              <tr>
+                <td class="th">Deal ID</td>
+                <td class="th">Train</td>
+                <td class="th">Price</td>
+              </tr>
+    
+              <tr *ngFor="let deal of deals;let i =index;">
+                <td>{{i+1}}</td>
+                <td>{{deal['train']}}</td>
+                <td>{{deal['price']}}</td>
+              </tr>
+              
+            </table>
+      </div>
+      
+      <div class="booking">
+        <form [formGroup]="trainform" (ngSubmit)="onsubmit()" novalidate>
+          <div class="hotel-form">
+            <br>
+            <label>Name:</label><br>
+            <select formControlName="train_name" class="dropdown">
+              <option selected>Geetanjali Express</option>
+              <option>Vidarbha Express</option>
+              <option>Duranto Express</option>
+            </select>
+            <br><br><br>
+            <label>Price per seat:</label><br>
+            <label>{{train_details.get(trainform.controls['train_name'].value)['price']}}</label>
+          </div>
+          <div class="hotel-form">
+            <br>
+            <label>No of seats:</label><br>
+            <input formControlName="seats" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0" max="available_seats">
+            <br>
+            <small style="color: red;position: absolute;" *ngIf="!(trainform.controls['seats'].valid || trainform.controls['seats'].untouched) || trainform.controls['seats'].value<0">Invalid number !</small>
+            <br><br><br>
+            <label>Available seats:</label><br>
+            <div *ngIf="trainform.controls['seats'].value>=0; then ifblock else elseblock"></div>
+            <ng-template #ifblock><label>+{{available_seats-trainform.controls['seats'].value}}</label></ng-template>
+            <ng-template #elseblock><label>+{{available_seats}}</label></ng-template>
+          </div>
+          <div class="hotel-form" style="padding-left: 60px;">
+            <br>
+            <label>From:</label><br>
+            <!--<input formControlName="from" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0">-->
+            <select formControlName="from" class="dropdown">
+              <option selected>Mumbai</option>
+              <option>Delhi</option>
+              <option>Nashik</option>
+            </select>
+            <br><br><br>
+            <label>To:</label><br>
+            <!--<label>${{hotel_details.get(hotelform.controls['hotel_name'].value)['price']}}</label>-->
+            <select formControlName="to" class="dropdown">
+              <option selected>Delhi</option>
+              <option>Mumbai</option>
+              <option>Nashik</option>
+            </select>
+          </div>
+          <div class="hotel-form" style="float:right;padding-right: 30px;">
+            <br>
+              <div style="float: right;padding-right: 20px;">
+                <label>Fare:</label><br><br>
+                <div *ngIf="trainform.controls['seats'].value>0; then ifblock2 else elseblock2"></div>
+                <ng-template #ifblock2><b style="font-size: 18px;">${{trainform.controls['seats'].value*train_details.get(trainform.controls['train_name'].value)['price']}}</b></ng-template>
+                <ng-template #elseblock2><b style="font-size: 18px;">$0</b></ng-template>
+              </div>
+            <br><br><br><br><br>
+            <span>
+              <button name="replace" type="submit">Replace</button>&nbsp;&nbsp;
+              <button name="ask_dealer" type="submit">Ask Dealer</button>&nbsp;&nbsp;
+              <button name="save_draft" type="submit">Save Draft</button>&nbsp;&nbsp;
+              <button [disabled]="trainform.controls['seats'].value*train_details.get(trainform.controls['train_name'].value)['price']<=00" name="book" type="submit">Book</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>

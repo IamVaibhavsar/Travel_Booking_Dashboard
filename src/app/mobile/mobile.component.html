@@ -1,0 +1,96 @@
+<div class="databar">
+    <div (click)="mobileexpand=true;" *ngIf="mobileexpand===false;else expand2" style="float: left;">
+      <i class="fa fa-plus"></i>&nbsp;&nbsp;
+    </div>
+    <ng-template #expand2>
+      <i (click)="mobileexpand=false;" class="fa fa-minus"></i>&nbsp;&nbsp;
+    </ng-template>
+    <span>
+      <label>Mobile</label>
+      <select class="databar-dropdown">
+        <option>Mobile</option>
+      </select>
+    </span>
+  </div>
+  
+  <div *ngIf="mobileexpand" style="max-height: 180px;">
+      
+      <div class="overview">
+          <p style="font-size: larger;">Mobile</p>
+          <label>{{deals.length}} trades</label><br>
+          <label>0 Drafts</label><br>
+          <label>0 Orders</label><br>
+          <label>0 Alerts</label><br><br>
+          <label>Page 1/1</label>
+      </div>
+      <div class="table-div">
+          <table>
+              <tr>
+                <td class="th">Deal ID</td>
+                <td class="th">Mobile No</td>
+                <td class="th">Provider</td>
+                <td class="th">Plan</td>
+                <td class="th">Price</td>
+              </tr>
+    
+              <tr *ngFor="let deal of deals;let i =index;">
+                <td>{{i+1}}</td>
+                <td>{{deal['mob']}}</td>
+                <td>{{deal['provider']}}</td>
+                <td>{{deal['plan']}}</td>
+                <td>{{deal['price']}}</td>
+              </tr>
+              
+            </table>
+      </div>
+      
+      <div class="booking">
+        <form [formGroup]="mobileform" (ngSubmit)="onsubmit()" novalidate>
+          <div class="hotel-form">
+            <br>
+            <label>Name:</label><br>
+            <select formControlName="service_provider_name" class="dropdown">
+              <option selected>Vodafone</option>
+              <option>Vi</option>
+              <option>Jio</option>
+            </select>
+            <br><br><br>
+            <label>Service Provider Charges:</label><br>
+            <label>{{mobile_details.get(mobileform.controls['service_provider_name'].value)['charge']}}</label>
+          </div>
+          <div class="hotel-form">
+            <br>
+            <label>Select Plan:</label><br>
+            <select formControlName="plan" class="dropdown">
+                <option *ngFor="let i of plans">
+                    {{i}}
+                </option>
+              </select>
+            <br><br><br>
+            <label>Plan charges:</label><br>
+            <label>{{plan_details.get(mobileform.controls['plan'].value)['price']}}</label>
+          </div>
+          <div class="hotel-form" style="padding-left: 60px;">
+            <br>
+            <label>Mob no:</label><br>
+            <input formControlName="phone_no" type="text" style="width:100px;margin-top:1px;border: 1px solid #dddddd;height:20px;"  maxlength="10" minlength="10">
+            <br>
+            <label style="color: red;position: absolute;" *ngIf="!(mobileform.controls['phone_no'].valid || mobileform.controls['phone_no'].untouched)">Invalid mobile number</label>
+          </div>
+          <div class="hotel-form" style="float:right;padding-right: 30px;">
+            <br>
+              <div style="float: right;padding-right: 20px;">
+                <label>Total price:</label><br><br>
+                <b style="font-size: 18px;">${{plan_details.get(mobileform.controls['plan'].value)['price'] + mobile_details.get(mobileform.controls['service_provider_name'].value)['charge']}}</b>
+              </div>
+            <br><br><br><br><br>
+            <span>
+              <button name="replace" type="submit">Replace</button>&nbsp;&nbsp;
+              <button name="ask_dealer" type="submit">Ask Dealer</button>&nbsp;&nbsp;
+              <button name="save_draft" type="submit">Save Draft</button>&nbsp;&nbsp;
+              <button [disabled]="mobileform.invalid" name="book" type="submit">Book</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>

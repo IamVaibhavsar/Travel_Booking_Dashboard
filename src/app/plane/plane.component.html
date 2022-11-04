@@ -1,0 +1,106 @@
+<div class="databar">
+  <div (click)="planeexpand=true;" *ngIf="planeexpand===false;else expand2" style="float: left;">
+    <i class="fa fa-plus"></i>&nbsp;&nbsp;
+  </div>
+  <ng-template #expand2>
+    <i (click)="planeexpand=false;" class="fa fa-minus"></i>&nbsp;&nbsp;
+  </ng-template>
+  <span>
+    <label>Airways</label>
+    <select class="databar-dropdown">
+      <option>Airways</option>
+    </select>
+  </span>
+</div>
+
+<div *ngIf="planeexpand" style="max-height: 180px;">
+    
+    <div class="overview">
+        <p style="font-size: larger;">Airways</p>
+        <label>{{deals.length}} trades</label><br>
+        <label>0 Drafts</label><br>
+        <label>0 Orders</label><br>
+        <label>0 Alerts</label><br><br>
+        <label>Page 1/1</label>
+    </div>
+    <div class="table-div">
+        <table>
+            <tr>
+              <td class="th">Deal ID</td>
+              <td class="th">Plane</td>
+              <td class="th">Price</td>
+            </tr>
+  
+            <tr *ngFor="let deal of deals;let i =index;">
+              <td>{{i+1}}</td>
+              <td>{{deal['plane']}}</td>
+              <td>{{deal['price']}}</td>
+            </tr>
+            
+          </table>
+    </div>
+    
+    <div class="booking">
+      <form [formGroup]="planeform" (ngSubmit)="onsubmit()" novalidate>
+        <div class="hotel-form">
+          <br>
+          <label>Name:</label><br>
+          <select formControlName="plane_name" class="dropdown">
+            <option selected>Air India</option>
+            <option>IndiGo</option>
+            <option>Spice Jet</option>
+          </select>
+          <br><br><br>
+          <label>Price per seat:</label><br>
+          <label>{{plane_details.get(planeform.controls['plane_name'].value)['price']}}</label>
+        </div>
+        <div class="hotel-form">
+          <br>
+          <label>No of seats:</label><br>
+          <input formControlName="seats" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0" max="available_seats">
+          <br>
+          <small style="color: red;position: absolute;" *ngIf="!(planeform.controls['seats'].valid || planeform.controls['seats'].untouched) || planeform.controls['seats'].value<0">Invalid number !</small>
+          <br><br><br>
+          
+          <label>Available seats:</label><br>
+          <div *ngIf="planeform.controls['seats'].value>=0; then ifblock else elseblock"></div>
+            <ng-template #ifblock><label>+{{available_seats-planeform.controls['seats'].value}}</label></ng-template>
+            <ng-template #elseblock><label>+{{available_seats}}</label></ng-template>
+        </div>
+        <div class="hotel-form" style="padding-left: 60px;">
+          <br>
+          <label>From:</label><br>
+          <!--<input formControlName="from" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0">-->
+          <select formControlName="from" class="dropdown">
+            <option selected>Mumbai</option>
+            <option>Delhi</option>
+            <option>Nashik</option>
+          </select>
+          <br><br><br>
+          <label>To:</label><br>
+          <!--<label>${{hotel_details.get(hotelform.controls['hotel_name'].value)['price']}}</label>-->
+          <select formControlName="to" class="dropdown">
+            <option selected>Delhi</option>
+            <option>Mumbai</option>
+            <option>Nashik</option>
+          </select>
+        </div>
+        <div class="hotel-form" style="float:right;padding-right: 30px;">
+          <br>
+            <div style="float: right;padding-right: 20px;">
+              <label>price:</label><br><br>
+              <div *ngIf="planeform.controls['seats'].value>0; then ifblock2 else elseblock2"></div>
+                <ng-template #ifblock2><b style="font-size: 18px;">${{planeform.controls['seats'].value*plane_details.get(planeform.controls['plane_name'].value)['price']}}</b></ng-template>
+                <ng-template #elseblock2><b style="font-size: 18px;">$0</b></ng-template>
+            </div>
+          <br><br><br><br><br>
+          <span>
+            <button name="replace" type="submit">Replace</button>&nbsp;&nbsp;
+            <button name="ask_dealer" type="submit">Ask Dealer</button>&nbsp;&nbsp;
+            <button name="save_draft" type="submit">Save Draft</button>&nbsp;&nbsp;
+            <button [disabled]="planeform.controls['seats'].value*plane_details.get(planeform.controls['plane_name'].value)['price']<=0" name="book" type="submit">Book</button>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>

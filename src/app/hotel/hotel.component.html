@@ -1,0 +1,101 @@
+<div class="databar">
+  
+  <div *ngIf="hotelexpand===false;else expand" style="float: left;">
+    <i (click)="hotelexpand=true;" class="fa fa-plus"></i>&nbsp;&nbsp;
+  </div>
+  <ng-template #expand>
+    <i (click)="hotelexpand=false;" class="fa fa-minus"></i>&nbsp;&nbsp;
+  </ng-template>
+  <span>
+    <label>Hotel</label>
+    <select class="databar-dropdown">
+      <option>Hotel</option>
+    </select>
+  </span>
+</div>
+
+
+<div *ngIf="hotelexpand" style="max-height: 180px;">
+    
+  <div class="overview">
+      <p style="font-size: larger;">HOTEL</p>
+      <label>{{deals.length}} trades</label><br>
+      <label>0 Drafts</label><br>
+      <label>0 Orders</label><br>
+      <label>0 Alerts</label><br><br>
+      <label>Page 1/1</label>
+  </div>
+  <div class="table-div">
+      <table>
+          <tr>
+            <td class="th">Deal ID</td>
+            <td class="th">Hotel</td>
+            <td class="th">Price</td>
+          </tr>
+
+          <tr *ngFor="let deal of deals;let i =index;">
+            <td>{{i+1}}</td>
+            <td>{{deal['hotel']}}</td>
+            <td>{{deal['price']}}</td>
+          </tr>
+          
+        </table>
+  </div>
+  
+  <div class="booking">
+    <form [formGroup]="hotelform" (ngSubmit)="onsubmit($event)" novalidate>
+      <div class="hotel-form">
+        <br>
+        <label>Name:</label><br>
+        <select formControlName="hotel_name" class="dropdown">
+          <option selected>Express Inn</option>
+          <option>Panchvati Hotel</option>
+        </select>
+        <br><br><br>
+        <label>Address:</label><br>
+        <label>{{hotel_details.get(hotelform.controls['hotel_name'].value)['address']}}</label>
+      </div>
+      <div class="hotel-form">
+        <br>
+        <label>Rooms:</label><br>
+        <input formControlName="rooms" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0" max="available_rooms">
+        <br>
+        <small style="color: red;position: absolute;" *ngIf="!(hotelform.controls['rooms'].valid || hotelform.controls['rooms'].untouched) || hotelform.controls['rooms'].value<0">Invalid number !</small>
+        <br><br><br>
+        <label>Available rooms:</label><br>
+        <div *ngIf="hotelform.controls['rooms'].value>=0; then ifblock else elseblock"></div>
+        <ng-template #ifblock><label>+{{available_rooms-hotelform.controls['rooms'].value}}</label></ng-template>
+        <ng-template #elseblock><label>+{{available_rooms}}</label></ng-template>
+        
+        
+      </div>
+      <div class="hotel-form" style="padding-left: 60px;">
+        <br>
+        <label>Days:</label><br>
+        <input formControlName="days" type="number" style="width:50px;margin-top:1px;border: 1px solid #dddddd;height:20px;" min="0">
+        <br>
+        <small style="color: red;position: absolute;" *ngIf="!(hotelform.controls['days'].valid || hotelform.controls['days'].untouched) || hotelform.controls['days'].value<0">Invalid number !</small>
+        <br><br><br>
+        <label>Room Price:</label><br>
+        <label>${{hotel_details.get(hotelform.controls['hotel_name'].value)['price']}}</label>
+      </div>
+      <div class="hotel-form" style="float:right;padding-right: 30px;">
+        <br>
+          <div style="float: right;padding-right: 20px;">
+            <label>price:</label><br><br>
+            <div *ngIf="hotelform.controls['rooms'].value>0 && hotelform.controls['days'].value>0; then ifblock2 else elseblock2"></div>
+            <ng-template #ifblock2><b style="font-size: 18px;">${{hotelform.controls['days'].value*hotelform.controls['rooms'].value*hotel_details.get(hotelform.controls['hotel_name'].value)['price']}}</b></ng-template>
+            <ng-template #elseblock2><b style="font-size: 18px;">$0</b></ng-template>
+            
+          </div>
+        <br><br><br><br><br>
+        <span>
+          <button name="replace" type="submit">Replace</button>&nbsp;&nbsp;
+          <button name="ask_dealer" type="submit">Ask Dealer</button>&nbsp;&nbsp;
+          <button name="save_draft" type="submit">Save Draft</button>&nbsp;&nbsp;
+          <button [disabled]="hotelform.controls['days'].value*hotelform.controls['rooms'].value*hotel_details.get(hotelform.controls['hotel_name'].value)['price']<=0" name="book" type="submit">Book</button>
+        </span>
+      </div>
+    </form>
+  </div>
+</div>
